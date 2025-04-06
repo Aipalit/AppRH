@@ -30,7 +30,7 @@ public class Vacancy implements Serializable {
     @NotEmpty
     private String salary;
 
-    @OneToMany(mappedBy = "vaga", cascade = CascadeType.REMOVE) // quando deletar uma vaga, deletar os candidatos
+    @OneToMany(mappedBy = "vacancy", cascade = CascadeType.REMOVE) // quando deletar uma vaga, deletar os candidatos
     private List<Candidate> candidates;
 
     public long getCode() {
