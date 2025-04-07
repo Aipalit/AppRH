@@ -75,4 +75,38 @@ public class VacancyController {
         return "redirect:/vacancys";
     }
 
+    public String vacancyDetailsPost(@PathVariable("code") long code, @Valid Candidate candidate, BindingResult result,
+            RedirectAttributes attributes) {
+        if (result.hasErrors()) {
+            attributes.addFlashAttribute("mensagem", "Verifique os Campos ...");
+            return "redirect:/{code}";
+        }
+        // Rg duplicado
+        if (cr.findByRg(candidate.getRg()) != null) {
+            attributes.addFlashAttribute("mensagem erro", "RG Duplicado");
+            return "redirect:/{code}";
+        }
+        // SAlvando candidato
+        Vacancy vacancy = vr.findByCode(code);
+        candidate.setVacancy(vacancy);
+        cr.save(candidate);
+        attributes.addFlashAttribute("mensaggem", "Candidato Salvo com Sucesso");
+
+        return "redirect:/{code}";
+
+    }
+
+    // Deleta Candidato pelo RG
+    @RequestMapping("/deleteCandidate")
+    public String deleteCandidate(String rg) {
+        Candidate candidate = cr.findByRg(rg);
+        Vacancy vacancy = candidate.getVacancy();
+        String code = "" + vacancy.getCode();
+
+        cr.delete(candidate);
+        return "redirect:/" + code;
+
+    }
+
+ 
 }
