@@ -107,6 +107,29 @@ public class VacancyController {
         return "redirect:/" + code;
 
     }
+    // Metodods que atualizam vagas 
+    //formulario edição vagas
+    @RequestMapping(value = "/edit-vacancy", method = RequestMethod.GET)
+    public ModelAndView EditVacancy (long code) {
+        Vacancy vacancy = vr.findByCode(code);
+        ModelAndView mv = new ModelAndView("Vaga/update-vacancy");
+        mv.addObject("vacancy", vacancy);
+        return mv;
+        
+    }
+    //update vaga
+    @RequestMapping(value = "/edit-vacancy", method = RequestMethod.POST)
+    public String updateVacancy(@Valid Vacancy vacancy, BindingResult result, RedirectAttributes attributes) {
+        if (result.hasErrors()) {
+            attributes.addFlashAttribute("mensagem", "Verifique os campos ...");
+            return "redirect:/edit-vacancy?code=" + vacancy.getCode();
+        }
+        vr.save(vacancy);
+        attributes.addFlashAttribute("mensagem", "Vaga atualizada com sucesso!");
+        return "redirect:/vacancys";
+    }
 
- 
+    
+
+
 }
